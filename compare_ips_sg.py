@@ -58,6 +58,12 @@ for ip in ips_to_check:
              for rule in security_group['rules'] :
                 if 'port_min' in rule:
                    if rule['direction'] == direction and (rule['port_min'] <= port_to_check <= rule['port_max']):
-                      cidr = ipaddress.ip_network(rule['remote']['cidr_block'])
-                      if ip_address in cidr:
-                         print('Security Group: ' + security_group['name'] + '  CIDR: ' + rule['remote']['cidr_block'] + '  Port Range: {}-{}'.format(rule['port_min'], rule['port_max'])) 
+                      remote_info=rule['remote']
+                      cidr = None
+                      if 'cidr_block' in remote_info:
+                         cidr = ipaddress.ip_network(remote_info['cidr_block'])
+                      if 'address' in remote_info:
+                         cidr = ipaddress.ip_network('{}/32'.format(remote_info['address']))
+                      if cidr != None:
+                         if ip_address in cidr:
+                            print('Security Group: ' + security_group['name'] + '  CIDR: ' + str(cidr) + '  Port Range: {}-{}'.format(rule['port_min'], rule['port_max'])) 
