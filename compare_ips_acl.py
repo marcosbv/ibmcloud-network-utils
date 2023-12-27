@@ -85,7 +85,7 @@ def find_rule(src_ip, src_port, dst_ip, dst_port, protocol, rules, text_prefix):
               break
            else:
               if rule['protocol'] == protocol:
-                 if (src_port == 0 or rule['source_port_min'] <= src_port <= rule['source_port_max']) and (dst_port == 0 or rule['destination_port_min'] <= dst_port <= rule['destination_port_max']):
+                 if ((src_port == 0 and rule['source_port_min'] == 1 and rule['source_port_max'] == 65535) or (int(rule['source_port_min']) <= src_port <= int(rule['source_port_max']))) and ((dst_port == 0  and rule['destination_port_min'] == 1 and rule['destination_port_max'] == 65535) or (int(rule['destination_port_min']) <= dst_port <= int(rule['destination_port_max']))):
                     print('{} #{}({}): Src CIDR:{} Src Port:{}-{}     Dst CIDR:{}  Dst Port:{}-{}  Prot:{}  Action:{}'.format( text_prefix, rule_number, rule['direction'], rule['source'], rule['source_port_min'], rule['source_port_max'], rule['destination'],  rule['destination_port_min'], rule['destination_port_max'], rule['protocol'], rule['action']) )
                     break
 
